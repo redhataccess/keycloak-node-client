@@ -1,0 +1,20 @@
+{
+  "name": "keycloak-node-client",
+  "version": "0.1.0",
+  "description": "A very simple server-side keycloak authentication module client for NodeJS",
+  "main": "src/KeycloakClient.js",
+  "scripts": {
+    "test": "node test/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/redhataccess/keycloak-node-client.git"
+  },
+  "author": "Jared Sprague",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/redhataccess/keycloak-node-client/issues"
+  },
+  "homepage": "https://github.com/redhataccess/keycloak-node-client#readme",
+  "type": "module"
+}
