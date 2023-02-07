@@ -2,7 +2,7 @@
   "name": "keycloak-node-client",
   "version": "0.1.0",
   "description": "A very simple server-side keycloak authentication module client for NodeJS",
-  "main": "src/KeycloakClient.js",
+  "main": "src/SSOClient.js",
   "scripts": {
     "test": "node test/index.js"
   },

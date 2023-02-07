@@ -1,6 +1,6 @@
-import fetch from "node-fetch";
+import nfetch from "node-fetch";
 
-class KeycloakClient {
+class SSOClient {
   constructor({
     url,
     realm,
@@ -9,8 +9,8 @@ class KeycloakClient {
     clientSecret,
     scopes = ["openid"],
     expiryGrace = 30,
-  }) {
-    this._jwt = {};
+  } = {}) {
+    this._oidcResponse = {};
     this.config = {
       url,
       realm,
@@ -27,7 +27,7 @@ class KeycloakClient {
   }
 
   async freshToken() {
-    // Get the JWT auth token based on the config
+    // Get the access token based on the config
     const tokenEndpointUrl =
       this.config.url + "realms/" + this.config.realm + "/protocol/openid-connect/token";
 
@@ -37,7 +37,7 @@ class KeycloakClient {
     formData.append("client_secret", this.config.clientSecret);
     formData.append("scope", this.config.scopes.join(" "));
 
-    const response = await fetch(tokenEndpointUrl, {
+    const response = await nfetch(tokenEndpointUrl, {
       method: "POST",
       body: formData.toString(),
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -48,25 +48,25 @@ class KeycloakClient {
       throw Error("Cannot get SSO Access Token. Server response=" + reponseText);
     }
 
-    this._jwt = await response.json();
-    this._jwt.created = Date.now();
+    this._oidcResponse = await response.json();
+    this._oidcResponse.created = Date.now();
 
-    return this._jwt.access_token;
+    return this._oidcResponse.access_token;
   }
 
   async refreshToken() {
-    if (!this._jwt || !this._jwt.access_token || this.isJWTExpiringSoon()) {
+    if (!this._oidcResponse || !this._oidcResponse.access_token || this.isTokenExpiringSoon()) {
       // Get a new token
       await this.freshToken();
     }
 
-    return this._jwt.access_token;
+    return this._oidcResponse.access_token;
   }
 
-  isJWTExpiringSoon() {
-    const elapsedSeconds = (Date.now() - this._jwt.created) / 1000;
+  isTokenExpiringSoon() {
+    const elapsedSeconds = (Date.now() - this._oidcResponse.created) / 1000;
 
-    if (elapsedSeconds + this.config.expiryGrace >= this._jwt.expires_in) {
+    if (elapsedSeconds + this.config.expiryGrace >= this._oidcResponse.expires_in) {
       // This token is expiring soon
       return true;
     }
@@ -75,4 +75,4 @@ class KeycloakClient {
   }
 }
 
-export default KeycloakClient;
+export default SSOClient;

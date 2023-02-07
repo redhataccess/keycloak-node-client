@@ -1,9 +1,9 @@
-import KeycloakClient from "../src/KeycloakClient.js";
+import SSOClient from "../src/SSOClient.js";
 import assert from "node:assert";
 import test from "node:test";
 
 function createClient() {
-  return new KeycloakClient({
+  return new SSOClient({
     url: process.env.URL,
     realm: process.env.REALM,
     scopes: [process.env.SCOPE],
@@ -43,7 +43,7 @@ test("Test refreshing expiring token", async () => {
   assert(token.length > 0);
 
   // Hack the expires_in property to make is really short
-  client._jwt.expires_in = 30;
+  client._oidcResponse.expires_in = 30;
 
   setTimeout(async () => {
     const newToken = await client.refreshToken();
