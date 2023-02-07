@@ -16,5 +16,8 @@
     "url": "https://github.com/redhataccess/keycloak-node-client/issues"
   },
   "homepage": "https://github.com/redhataccess/keycloak-node-client#readme",
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "node-fetch": "^3.3.0"
+  }
 }
